@@ -1,0 +1,64 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  name      String
+  email     String       @unique
+  password  String 
+  avatarImg String?
+  bgImg     String?
+
+  refresh_tokens RefreshToken[]
+  permissions  UserPermission[]
+
+  @@map("users")
+}
+
+model RefreshToken {
+  token     String  @unique
+  user_id   Int 
+  user      User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  created_at DateTime @default(now()) @db.Timestamptz
+  @@map("refresh_tokens")
+}
+
+model Permission {
+  id        String       @id
+  name      String
+  description String?
+  active Boolean @default(true)
+  created_at DateTime @default(now()) @db.Timestamptz
+  updated_at DateTime @updatedAt @db.Timestamptz
+
+  users     UserPermission[]
+  
+  @@map("permissions")
+}
+
+model UserPermission {
+  user_id    Int
+  permission_id String
+
+  user      User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permission_id], references: [id], onDelete: Cascade)
+  
+  created_at DateTime @default(now()) @db.Timestamptz
+  updated_at DateTime @updatedAt @db.Timestamptz
+
+  @@id([user_id, permission_id])
+  @@map("user_permission")
+}
