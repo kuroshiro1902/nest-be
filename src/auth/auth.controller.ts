@@ -12,7 +12,7 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { TUserLogin, ZUserLogin } from './models/user-login.model';
+import { TUserLogin, ZUserLogin } from './models/auth.model';
 import { StatusCodes } from 'http-status-codes';
 import { JwtAccessTokenGuard } from './guards/jwt-access-token.guard';
 import { UserService } from '@/user/user.service';

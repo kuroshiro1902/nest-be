@@ -3,29 +3,33 @@ import { Injectable, CanActivate, ExecutionContext, HttpException } from '@nestj
 import { Request } from 'express';
 import { AuthService } from '../auth.service';
 import { StatusCodes } from 'http-status-codes';
+import { AccessTokenCacheService } from '@/cache/access-token-cache.service.service';
 
 @Injectable()
 export class JwtAccessTokenGuard implements CanActivate {
   constructor(
-    // private readonly reflector: Reflector,
-    private readonly authService: AuthService,
+    private authService: AuthService,
+    private accessTokenCacheService: AccessTokenCacheService,
   ) {}
 
-  canActivate(context: ExecutionContext): boolean {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const request: Request = context.switchToHttp().getRequest();
     // const response: Response = context.switchToHttp().getResponse();
 
     const accessToken = request.headers['authorization']?.split(' ')[1];
 
-    try {
+    if (!accessToken) {
+      throw new HttpException('Access token not found!', StatusCodes.UNAUTHORIZED);
+    }
+
+    const cacheUser = await this.accessTokenCacheService.getToken(accessToken);
+    if (cacheUser) {
+      request.user = cacheUser;
+    } else {
       const user = this.authService.verifyAccessToken(accessToken);
       request.user = user;
-      return true;
-    } catch (error: any) {
-      throw new HttpException(
-        error?.message || 'Error check access token!',
-        StatusCodes.UNAUTHORIZED,
-      );
+      void this.accessTokenCacheService.setToken(accessToken, user);
     }
+    return true;
   }
 }

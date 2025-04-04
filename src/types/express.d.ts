@@ -1,4 +1,4 @@
-import { TUserJWTPayload } from '@/auth/models/user-jwt-payload.model';
+import { TUserJWTPayload } from '@/auth/models/auth.model';
 
 declare global {
   declare namespace Express {

@@ -24,6 +24,7 @@
     "p": "npx nest g provider"
   },
   "dependencies": {
+    "@nestjs/cache-manager": "^3.0.1",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.1",
     "@nestjs/core": "^11.0.1",
@@ -32,6 +33,7 @@
     "@nestjs/schedule": "^5.0.1",
     "@prisma/client": "^6.5.0",
     "bcrypt": "^5.1.1",
+    "cache-manager": "^6.4.1",
     "cookie-parser": "^1.4.7",
     "envalid": "^8.0.0",
     "helmet": "^8.1.0",

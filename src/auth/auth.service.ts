@@ -11,11 +11,10 @@ import {
 } from '@nestjs/common';
 import bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { TUserJWTPayload } from './models/user-jwt-payload.model';
 import { CONFIG } from '@/config/config';
 import { ENV } from '@/environment/environment';
 import { UserService } from '@/user/user.service';
-import { TRefreshToken, TUserLogin } from './models/user-login.model';
+import { TRefreshToken, TUserJWTPayload, TUserLogin } from './models/auth.model';
 import { Cron } from '@nestjs/schedule';
 
 @Injectable()
