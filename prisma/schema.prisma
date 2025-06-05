@@ -1,0 +1,80 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(uuid(7)) @map("id") @db.Uuid
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz
+
+  name        String  @map("name") @db.VarChar(255)
+  username    String  @unique @map("username") @db.VarChar(255)
+  password    String  @map("password") @db.Text
+  email       String? @unique @map("email") @db.VarChar(255)
+  dob         String? @map("dob") @db.VarChar(10)
+  description String? @map("description") @db.Text
+  avatarUrl   String? @map("avatar_url") @db.Text
+  bgImgUrl    String? @map("bg_img_url") @db.Text
+
+  notebooks NoteBook[]
+
+  @@map("users")
+}
+
+model NoteBook {
+  id        String    @id @default(uuid(7)) @map("id") @db.Uuid
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz
+
+  description String? @map("description") @db.Text
+
+  userId String @map("user_id") @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  notes Note[]
+
+  @@map("notebooks")
+}
+
+model Note {
+  id        String    @id @default(uuid(7)) @map("id") @db.Uuid
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz
+
+  title   String @map("title") @db.Text
+  content String @map("content") @db.Text
+
+  notebookId String   @map("notebook_id") @db.Uuid
+  notebook   NoteBook @relation(fields: [notebookId], references: [id], onDelete: Cascade)
+
+  tags Tag[]
+
+  @@map("notes")
+}
+
+model Tag {
+  id        String    @id @default(uuid(7)) @map("id") @db.Uuid
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz
+
+  value String @map("value") @db.Text
+
+  notes Note[]
+
+  @@map("tags")
+}
