@@ -2,7 +2,7 @@ import { ZTrimString } from '@/modules/common/model/string.model';
 import { z } from 'zod';
 import dayjs from 'dayjs';
 
-export const ZSignupInput = z.object({
+export const ZSignup = z.object({
   name: ZTrimString.min(5).max(255),
   username: ZTrimString.min(5).max(30),
   password: z.string().min(6).max(30),
@@ -23,4 +23,4 @@ export const ZSignupInput = z.object({
   bgImgUrl: ZTrimString.max(1000).optional(),
 });
 
-export type TSignupInput = z.infer<typeof ZSignupInput>;
+export type TSignup = z.infer<typeof ZSignup>;
