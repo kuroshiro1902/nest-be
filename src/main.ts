@@ -3,14 +3,12 @@ import { AppModule } from './app.module';
 import { ENV } from './env';
 import helmet from 'helmet';
 import * as cookieParser from 'cookie-parser';
-import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('/api');
   app.use(helmet({ xPoweredBy: false }));
   app.enableCors({ origin: ENV.CLIENT_URL, credentials: true });
   app.use(cookieParser());
-  app.useGlobalPipes(new ValidationPipe({ transform: true }));
   await app.listen(ENV.SERVER_PORT, () => {
     console.log(`Server đang chạy tại port ${ENV.SERVER_PORT}`);
   });
