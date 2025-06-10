@@ -67,8 +67,6 @@ export class AuthService {
 
     const { password: _, ...userWithoutPassword } = user;
 
-    console.log({ accessToken });
-
     return { user: userWithoutPassword, accessToken };
   }
 
@@ -85,6 +83,17 @@ export class AuthService {
       void this.deleteAccessTokenCache(accessToken);
       throw new UnauthorizedException('Token is expired!');
     }
+  }
+
+  async getUserById(userId: string): Promise<Omit<User, 'password'>> {
+    const user = await this.databaseService.user.findUnique({
+      where: { id: userId },
+      omit: { password: true },
+    });
+    if (!user) {
+      throw new NotFoundException('Người dùng không tồn tại!');
+    }
+    return user;
   }
 
   // Cache

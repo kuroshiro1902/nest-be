@@ -16,3 +16,8 @@ Content-Type: application/json
   "username": "admin",
   "password": "123456"
 }
+
+### Get my infomation
+GET http://localhost:3000/api/auth/me
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAxOTc1OGY5LWQ1N2ItNzY0My1iY2FmLTI1YTgzMzdhMGE3MCIsImlhdCI6MTc0OTU2Mzc4MCwiZXhwIjoxNzQ5NTY0MDgwfQ.eHL8Ii8VcrsYvsi--8fXNrd220kXoEaILiiDD14xIzo
