@@ -1,6 +1,6 @@
 import { AuthTokenGuard } from '@/modules/auth/guard/auth-token.guard';
 import { NotebookService } from '../service/notebook.service';
-import { Body, Controller, Get, Param, Post, Put, Req, UseGuards } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
 import { CreateNotebookDto } from '../dto/create-notebook.dto';
 import { Request } from 'express';
 import { ZodBody, ZodQuery } from '@/modules/common/decorators';
@@ -26,7 +26,13 @@ export class NotebookController {
     return this.notebookService.search(req.user.id, searchNotebookInput);
   }
 
-  @Put(':id')
+  @Get(':id')
+  @ApiOperation({ summary: 'Get a notebook by id' })
+  async getOne(@Req() req: Request, @Param('id') id: string) {
+    return this.notebookService.findOneOrThrow({ where: { userId: req.user.id, id } });
+  }
+
+  @Patch(':id')
   @ApiOperation({ summary: 'Update a notebook' })
   async updateOne(
     @Req() req: Request,
@@ -34,5 +40,11 @@ export class NotebookController {
     @ZodBody(UpdateNoteBookDto) updateNotebookInput: UpdateNoteBookDto,
   ) {
     return this.notebookService.updateOne(req.user.id, id, updateNotebookInput);
+  }
+
+  @Delete(':id')
+  @ApiOperation({ summary: 'Delete a notebook' })
+  async deleteOne(@Req() req: Request, @Param('id') id: string) {
+    return this.notebookService.deleteOne(req.user.id, id);
   }
 }

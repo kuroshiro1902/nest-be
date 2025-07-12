@@ -7,9 +7,20 @@ import { CommonModule } from './modules/common/common.module';
 import { CacheModule } from './modules/cache/cache.module';
 import { NotebookModule } from './modules/notebook/notebook.module';
 import { UserModule } from './modules/user/user.module';
+import { NoteModule } from './modules/note/note.module';
+import { NoteToNotebookModule } from './modules/note-to-notebook/note-to-notebook.module';
 
 @Module({
-  imports: [DatabaseModule, AuthModule, CommonModule, CacheModule, NotebookModule, UserModule],
+  imports: [
+    DatabaseModule,
+    AuthModule,
+    CommonModule,
+    CacheModule,
+    NotebookModule,
+    UserModule,
+    NoteModule,
+    NoteToNotebookModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
