@@ -1,7 +1,8 @@
 import { BaseEntity } from '@/modules/common/entity/base.entity';
 import { User } from '@/modules/user/entity/user.entity';
 import { NoteBook } from '@/modules/notebook/entity/notebook.entity';
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+import { NoteTag } from './note-tag.entity';
 
 @Entity()
 export class Note extends BaseEntity {
@@ -27,4 +28,9 @@ export class Note extends BaseEntity {
   @ManyToOne(() => User, (user) => user.notes)
   @JoinColumn({ name: 'user_id' })
   user: User;
+
+  @OneToMany(() => NoteTag, (noteTag) => noteTag.note, {
+    cascade: ['insert', 'update'],
+  })
+  noteTags: NoteTag[];
 }

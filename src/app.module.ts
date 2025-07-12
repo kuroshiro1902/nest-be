@@ -8,6 +8,7 @@ import { CacheModule } from './modules/cache/cache.module';
 import { NotebookModule } from './modules/notebook/notebook.module';
 import { UserModule } from './modules/user/user.module';
 import { NoteModule } from './modules/note/note.module';
+import { TagModule } from './modules/tag/tag.module';
 import { NoteToNotebookModule } from './modules/note-to-notebook/note-to-notebook.module';
 
 @Module({
@@ -20,6 +21,7 @@ import { NoteToNotebookModule } from './modules/note-to-notebook/note-to-noteboo
     UserModule,
     NoteModule,
     NoteToNotebookModule,
+    TagModule,
   ],
   controllers: [AppController],
   providers: [AppService],

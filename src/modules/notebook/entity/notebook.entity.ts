@@ -2,6 +2,7 @@ import { Entity, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 import { User } from '@/modules/user/entity/user.entity';
 import { BaseEntity } from '@/modules/common/entity/base.entity';
 import { Note } from '@/modules/note/entity/note.entity';
+import { NotebookTag } from './notebook-tag.entity';
 
 export enum ENoteBookStatus {
   ACTIVE = 'active',
@@ -30,4 +31,9 @@ export class NoteBook extends BaseEntity {
     cascade: ['insert', 'update'],
   })
   notes: Note[];
+
+  @OneToMany(() => NotebookTag, (notebookTag) => notebookTag.notebook, {
+    cascade: ['insert', 'update'],
+  })
+  notebookTags: NotebookTag[];
 }
