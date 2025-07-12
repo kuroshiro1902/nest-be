@@ -1,6 +1,24 @@
 import { createParamDecorator, ExecutionContext, BadRequestException } from '@nestjs/common';
 import { ZodSchema } from 'zod';
 
+export const ZodValidate = <T>(schema: ZodSchema<T>, type: 'body' | 'query' | 'params' | 'headers') => {
+  return createParamDecorator((_, ctx: ExecutionContext): T => {
+    const request = ctx.switchToHttp().getRequest();
+    const data = request[type];
+
+    const result = schema.safeParse(data);
+    if (!result.success) {
+      const firstError = result.error.errors[0];
+      const field = firstError?.path?.join('.') || type;
+      const message = firstError?.message || 'Validation failed';
+
+      throw new BadRequestException(`${field}: ${message}`);
+    }
+
+    return result.data;
+  })();
+};
+
 /**
  * Decorator để validate body với Zod schema
  * @param schema Zod schema để validate

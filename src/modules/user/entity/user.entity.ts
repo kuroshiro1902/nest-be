@@ -1,6 +1,7 @@
 import { NoteBook } from '@/modules/notebook/entity/notebook.entity';
 import { Entity, Column, OneToMany } from 'typeorm';
 import { BaseEntity } from '@/modules/common/entity/base.entity';
+import { Note } from '@/modules/note/entity/note.entity';
 
 @Entity({ name: 'users' })
 export class User extends BaseEntity {
@@ -32,4 +33,9 @@ export class User extends BaseEntity {
     cascade: ['insert', 'update'],
   })
   notebooks: NoteBook[];
+
+  @OneToMany(() => Note, (note) => note.user, {
+    cascade: ['insert', 'update'],
+  })
+  notes: Note[];
 }
