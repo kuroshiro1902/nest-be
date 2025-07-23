@@ -8,7 +8,7 @@ export const dataSourceOptions: DataSourceOptions = {
   port: ENV.DATABASE.PORT,
   username: ENV.DATABASE.USERNAME,
   password: ENV.DATABASE.PASSWORD,
-  database: ENV.DATABASE.NAME,
+  database: ENV.DATABASE.DB,
   schema: ENV.DATABASE.SCHEMA,
   entities: [join(__dirname, '..', '**', '*.entity{.ts,.js}')],
   migrations: [join(__dirname, 'migrations', '*.ts')],

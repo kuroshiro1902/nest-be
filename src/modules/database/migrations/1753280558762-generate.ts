@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class Generate1753279989148 implements MigrationInterface {
-    name = 'Generate1753279989148'
+export class Generate1753280558762 implements MigrationInterface {
+    name = 'Generate1753280558762'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`CREATE TABLE "notebook_tags" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP WITH TIME ZONE, "notebook_id" uuid NOT NULL, "tag_id" uuid NOT NULL, CONSTRAINT "UQ_7d6f3306edb27f3567b8d3ee1c2" UNIQUE ("notebook_id", "tag_id"), CONSTRAINT "PK_db214dc693191eee5fea897de84" PRIMARY KEY ("id"))`);

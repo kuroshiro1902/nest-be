@@ -15,12 +15,12 @@ const env = cleanEnv(process.env, {
   SERVER_PORT: port({ devDefault: 3000 }),
 
   // DATABASE - must be exactly like docker-compose `db` service environment.
-  DATABASE_HOST: str(),
-  DATABASE_PORT: num(),
-  DATABASE_USERNAME: str(),
-  DATABASE_PASSWORD: str(),
-  DATABASE_NAME: str(),
-  DATABASE_SCHEMA: str(),
+  POSTGRES_HOST: str(),
+  POSTGRES_PORT: num(),
+  POSTGRES_USERNAME: str(),
+  POSTGRES_PASSWORD: str(),
+  POSTGRES_DB: str(),
+  POSTGRES_SCHEMA: str(),
 
   // Client
   CLIENT_URL: str(),
@@ -39,12 +39,12 @@ export const ENV = {
   SERVER_PORT: env.SERVER_PORT,
   CLIENT_URL: env.CLIENT_URL,
   DATABASE: {
-    HOST: env.DATABASE_HOST,
-    PORT: env.DATABASE_PORT,
-    USERNAME: env.DATABASE_USERNAME,
-    PASSWORD: env.DATABASE_PASSWORD,
-    NAME: env.DATABASE_NAME,
-    SCHEMA: env.DATABASE_SCHEMA,
+    HOST: env.POSTGRES_HOST,
+    PORT: env.POSTGRES_PORT,
+    USERNAME: env.POSTGRES_USERNAME,
+    PASSWORD: env.POSTGRES_PASSWORD,
+    DB: env.POSTGRES_DB,
+    SCHEMA: env.POSTGRES_SCHEMA,
   },
   JWT: {
     ACCESS_TOKEN_SECRET: env.ACCESS_TOKEN_SECRET,
