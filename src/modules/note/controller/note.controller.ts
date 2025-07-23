@@ -12,7 +12,7 @@ export class NoteController {
 
   @Post()
   async createOne(@Req() req: Request, @ZodBody(CreateNoteDto) createNoteInput: CreateNoteDto) {
-    return this.noteService.createOne(req.user.id, createNoteInput);
+    return this.noteService.createOne({ ...createNoteInput, userId: req.user.id });
   }
 
   @Get('search')

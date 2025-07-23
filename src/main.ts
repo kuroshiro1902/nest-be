@@ -3,12 +3,22 @@ import { AppModule } from './app.module';
 import { ENV } from './config/environment.config';
 import helmet from 'helmet';
 import * as cookieParser from 'cookie-parser';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('/api');
   app.use(helmet({ xPoweredBy: false }));
   app.enableCors({ origin: ENV.CLIENT_URL, credentials: true });
   app.use(cookieParser());
+
+  const config = new DocumentBuilder()
+    .setTitle('Nest API')
+    .setDescription('Nest API description')
+    .setVersion('1.0')
+    .addTag('nest')
+    .build();
+  const documentFactory = () => SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api-docs', app, documentFactory);
   await app.listen(ENV.SERVER_PORT, () => {
     console.log(`Server đang chạy tại port ${ENV.SERVER_PORT}`);
   });

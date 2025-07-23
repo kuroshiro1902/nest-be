@@ -17,7 +17,7 @@ export class TagController {
   @Post()
   @ApiOperation({ summary: 'Create a new tag' })
   async createOne(@Req() req: Request, @ZodBody(CreateTagDto) createTagDto: CreateTagDto) {
-    return this.tagService.createOne(req.user.id, createTagDto);
+    return this.tagService.createOne({ ...createTagDto, userId: req.user.id });
   }
 
   @Get('search')
@@ -29,7 +29,7 @@ export class TagController {
   @Get(':id')
   @ApiOperation({ summary: 'Get a tag by ID' })
   async getOne(@Req() req: Request, @Param('id') id: string) {
-    return this.tagService.findOneOrThrow({ where: { createdByUserId: req.user.id, id } });
+    return this.tagService.findOneOrThrow({ where: { userId: req.user.id, id } });
   }
 
   @Patch(':id')

@@ -17,7 +17,7 @@ export class NotebookController {
   @Post()
   @ApiOperation({ summary: 'Create a new notebook' })
   async createOne(@Req() req: Request, @ZodBody(CreateNotebookDto) createNotebookInput: CreateNotebookDto) {
-    return this.notebookService.createOne(req.user.id, createNotebookInput);
+    return this.notebookService.createOne({ ...createNotebookInput, userId: req.user.id });
   }
 
   @Get('search')

@@ -9,6 +9,7 @@ import { CacheService } from '@/modules/cache/service/cache.service';
 import { ACCESS_TOKEN_CACHE } from '../constant/access-token-cache.const';
 import { User } from '@/modules/user/entity/user.entity';
 import { UserService } from '@/modules/user/service/user.service';
+import { CreateUserDto } from '@/modules/user/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -28,9 +29,9 @@ export class AuthService {
     }
 
     const hashedPassword = await bcrypt.hash(user.password, 10);
-    const newUserInput = { ...user, password: hashedPassword };
+    const newUserInput: CreateUserDto = { ...user, password: hashedPassword };
 
-    const createdUser = await this.userService.save(newUserInput);
+    const createdUser = await this.userService.createOne(newUserInput);
 
     const { password: _, ...userWithoutPassword } = createdUser;
 

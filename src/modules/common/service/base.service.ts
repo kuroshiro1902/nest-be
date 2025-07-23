@@ -3,29 +3,8 @@ import { FindManyOptions, FindOneOptions, FindOptionsOrder, Repository, EntityTa
 import { BaseEntity } from '../entity/base.entity';
 import { PageInputDto, PageResult } from '../dto/pagination.model';
 
-export abstract class BaseService<T extends BaseEntity> extends Repository<T> {
-  constructor(
-    protected readonly entity: EntityTarget<T>,
-    @Inject(DataSource) dataSource: DataSource,
-  ) {
-    super(entity, dataSource.manager);
-  }
-
-  async findOneOrThrow(options: FindOneOptions<T>): Promise<T> {
-    const entity = await super.findOne(options);
-    if (!entity) {
-      throw new NotFoundException('Entity not found');
-    }
-    return entity;
-  }
-
-  async softDelete(id: string) {
-    const result = await super.softDelete(id);
-    if (result.affected === 0) {
-      throw new BadRequestException('Cannot delete entity, try again later.');
-    }
-    return result;
-  }
+export abstract class BaseService<T extends BaseEntity> {
+  constructor(protected readonly repository: Repository<T>) {}
 
   async paginate(
     pageInput: PageInputDto<T>,
@@ -34,7 +13,7 @@ export abstract class BaseService<T extends BaseEntity> extends Repository<T> {
     const { page, limit, sort = 'createdAt', order = 'DESC' }: PageInputDto<T> = pageInput;
     const skip = (page - 1) * limit;
     const orderBy = { [sort]: order } as FindOptionsOrder<T>;
-    const [data, total] = await super.findAndCount({
+    const [data, total] = await this.repository.findAndCount({
       skip,
       take: limit,
       order: orderBy,

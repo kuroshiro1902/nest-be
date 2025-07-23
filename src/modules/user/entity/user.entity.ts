@@ -40,6 +40,8 @@ export class User extends BaseEntity {
   })
   notes: Note[];
 
-  @OneToMany(() => Tag, (tag) => tag.createdBy)
+  @OneToMany(() => Tag, (tag) => tag.user, {
+    cascade: ['insert', 'update'],
+  })
   tags: Tag[];
 }
