@@ -4,6 +4,11 @@ import { BaseEntity } from '@/modules/common/entity/base.entity';
 import { Note } from '@/modules/note/entity/note.entity';
 import { Tag } from '@/modules/tag/entity/tag.entity';
 
+export enum EUserRole {
+  ADMIN = 'admin',
+  USER = 'user',
+}
+
 @Entity({ name: 'users' })
 export class User extends BaseEntity {
   @Column({ name: 'name', type: 'varchar', length: 255 })
@@ -29,6 +34,9 @@ export class User extends BaseEntity {
 
   @Column({ name: 'bg_url', type: 'text', nullable: true })
   bgUrl: string | null;
+
+  @Column({ name: 'role', type: 'varchar', length: 50, default: EUserRole.USER })
+  role: EUserRole;
 
   @OneToMany(() => NoteBook, (notebook) => notebook.user, {
     cascade: ['insert', 'update'],

@@ -2,10 +2,11 @@ import { Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { AuthService } from '../service/auth.service';
 import { SignupDto } from '../dto/signup.dto';
 import { LoginDto } from '../dto/login.dto';
-import { ZodBody, DevOnlyApiLog } from '@/modules/common/decorators';
+import { ZodBody, DevOnlyApiRequestLog, DevOnlyApiResponseLog } from '@/modules/common/decorators';
 
 @Controller('auth')
-@DevOnlyApiLog()
+@DevOnlyApiRequestLog()
+@DevOnlyApiResponseLog()
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 

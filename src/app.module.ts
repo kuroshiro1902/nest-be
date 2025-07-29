@@ -10,6 +10,7 @@ import { UserModule } from './modules/user/user.module';
 import { NoteModule } from './modules/note/note.module';
 import { TagModule } from './modules/tag/tag.module';
 import { NoteToNotebookModule } from './modules/note-to-notebook/note-to-notebook.module';
+import { AppConfigModule } from './modules/app-config/app-config.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { NoteToNotebookModule } from './modules/note-to-notebook/note-to-noteboo
     NoteModule,
     NoteToNotebookModule,
     TagModule,
+    AppConfigModule,
   ],
   controllers: [AppController],
   providers: [AppService],

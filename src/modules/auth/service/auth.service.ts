@@ -52,7 +52,7 @@ export class AuthService {
 
     const accessToken = await this.cacheService.getOrSet(
       ACCESS_TOKEN_CACHE.key(user.id),
-      () => this.signAccessToken({ id: user.id }),
+      () => this.signAccessToken({ id: user.id, role: user.role }),
       ENV.JWT.ACCESS_TOKEN_EXPIRES_IN,
     );
 
@@ -76,6 +76,7 @@ export class AuthService {
     return this.jwtService.sign(
       {
         id: payload.id,
+        role: payload.role,
       },
       {
         algorithm: 'HS256',

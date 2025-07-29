@@ -1,6 +1,14 @@
 import { applyDecorators, UseInterceptors } from '@nestjs/common';
-import { ApiLogInterceptor } from '../interceptors/api-log.interceptor';
+import { ApiRequestLogInterceptor, ApiResponseLogInterceptor } from '../interceptors/api-log.interceptor';
 import { ENV } from '@/config/environment.config';
-export function DevOnlyApiLog() {
-  return ENV.NODE_ENV === 'development' ? applyDecorators(UseInterceptors(ApiLogInterceptor)) : applyDecorators();
+export function DevOnlyApiRequestLog() {
+  return ENV.NODE_ENV === 'development'
+    ? applyDecorators(UseInterceptors(ApiRequestLogInterceptor))
+    : applyDecorators();
+}
+
+export function DevOnlyApiResponseLog() {
+  return ENV.NODE_ENV === 'development'
+    ? applyDecorators(UseInterceptors(ApiResponseLogInterceptor))
+    : applyDecorators();
 }

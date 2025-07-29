@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 @Injectable()
-export class ApiLogInterceptor implements NestInterceptor {
+export class ApiRequestLogInterceptor implements NestInterceptor {
   private readonly logger = new Logger('API');
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
@@ -28,14 +28,43 @@ export class ApiLogInterceptor implements NestInterceptor {
     const now = Date.now();
     return next.handle().pipe(
       tap({
-        next: (data) => {
+        next: (_) => {
           const duration = Date.now() - now;
           this.logger.log(`[RESPONSE] ${method} ${originalUrl} - ${duration}ms - Success`);
-          // this.logger.debug('Response data:', data);
         },
         error: (error) => {
           const duration = Date.now() - now;
           this.logger.error(`[ERROR] ${method} ${originalUrl} - ${duration}ms - ${error.message}`, error.stack);
+        },
+      }),
+    );
+  }
+}
+@Injectable()
+export class ApiResponseLogInterceptor implements NestInterceptor {
+  private readonly logger = new Logger('API');
+
+  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+    const req = context.switchToHttp().getRequest();
+    const { method, originalUrl } = req;
+    const ip = req.ip;
+    const userAgent = req.headers['user-agent'] || '';
+    const now = Date.now();
+
+    return next.handle().pipe(
+      tap({
+        next: (responseBody) => {
+          const duration = Date.now() - now;
+
+          this.logger.log(
+            `[RESPONSE] ${method} ${originalUrl} - ${duration}ms - IP: ${ip} - UA: ${userAgent} - RETURN: ${JSON.stringify(
+              responseBody,
+            )}`,
+          );
+        },
+        error: (err) => {
+          const duration = Date.now() - now;
+          this.logger.error(`[ERROR] ${method} ${originalUrl} - ${duration}ms - ${err.message}`, err.stack);
         },
       }),
     );
