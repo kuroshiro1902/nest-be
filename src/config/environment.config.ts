@@ -9,7 +9,7 @@ const env = cleanEnv(process.env, {
 
   // Rate Limiting
   COMMON_RATE_LIMIT_MAX_REQUESTS: num({ devDefault: 100 }),
-  COMMON_RATE_LIMIT_WINDOW_MS: num({ devDefault: 1000 }),
+  COMMON_RATE_LIMIT_WINDOW_MS: num({ devDefault: 60000 }),
 
   // Server, port
   SERVER_PORT: port({ devDefault: 3000 }),

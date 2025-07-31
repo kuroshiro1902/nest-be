@@ -6,7 +6,7 @@ import { AuthService } from '../service/auth.service';
 export class AuthTokenGuard implements CanActivate {
   constructor(private authService: AuthService) {}
 
-  canActivate(context: ExecutionContext): boolean {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const request: Request = context.switchToHttp().getRequest();
 
     const accessTokenParts = request.headers['authorization']?.split(' ');
@@ -21,7 +21,7 @@ export class AuthTokenGuard implements CanActivate {
       throw new UnauthorizedException('Token not found!');
     }
 
-    const user = this.authService.verifyAccessToken(accessToken);
+    const user = await this.authService.verifyAccessToken(accessToken);
     request.user = user;
     return true;
   }
