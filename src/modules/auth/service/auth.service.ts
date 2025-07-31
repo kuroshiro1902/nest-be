@@ -65,18 +65,19 @@ export class AuthService {
   }
 
   async verifyAccessToken(accessToken: string): Promise<AccessTokenPayload> {
+    let decoded: AccessTokenPayload;
     try {
-      const decoded = this.jwtService.verify<AccessTokenPayload>(accessToken, {
+      decoded = this.jwtService.verify<AccessTokenPayload>(accessToken, {
         secret: ENV.JWT.ACCESS_TOKEN_SECRET,
       });
-      const isBlackListed = await this.cacheService.exists(ACCESS_TOKEN_CACHE_KEY.blackList(decoded.jti));
-      if (isBlackListed) {
-        throw new UnauthorizedException('Token is expired (2)!');
-      }
-      return decoded;
     } catch {
-      throw new UnauthorizedException('Token is expired (1)!');
+      throw new UnauthorizedException('Token is expired or invalid!');
     }
+    const isBlackListed = await this.cacheService.exists(ACCESS_TOKEN_CACHE_KEY.blackList(decoded.jti));
+    if (isBlackListed) {
+      throw new UnauthorizedException('Token is expired!');
+    }
+    return decoded;
   }
 
   private signAccessToken(payload: AccessTokenPayload): string {

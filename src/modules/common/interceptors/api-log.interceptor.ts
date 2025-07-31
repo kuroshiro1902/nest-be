@@ -8,20 +8,20 @@ export class ApiRequestLogInterceptor implements NestInterceptor {
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const request = context.switchToHttp().getRequest();
-    const { method, originalUrl, body, query, params } = request;
+    const { method, originalUrl, body, query, params } = request ?? {};
     const userAgent = request.get('user-agent') || '';
     const ip = request.ip;
 
     // Log request
     this.logger.log(`[REQUEST] ${method} ${originalUrl} - IP: ${ip} - User-Agent: ${userAgent}`);
 
-    if (Object.keys(body).length > 0) {
+    if (Object.keys(body ?? {}).length > 0) {
       this.logger.debug('Body:', body);
     }
-    if (Object.keys(query).length > 0) {
+    if (Object.keys(query ?? {}).length > 0) {
       this.logger.debug('Query:', query);
     }
-    if (Object.keys(params).length > 0) {
+    if (Object.keys(params ?? {}).length > 0) {
       this.logger.debug('Params:', params);
     }
 

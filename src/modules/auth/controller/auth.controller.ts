@@ -1,4 +1,4 @@
-import { Controller, HttpCode, HttpStatus, Post, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, HttpCode, HttpStatus, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from '../service/auth.service';
 import { SignupDto } from '../dto/signup.dto';
 import { LoginDto } from '../dto/login.dto';
@@ -30,5 +30,12 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async logout(@Req() req: Request) {
     return this.authService.logout(req.user);
+  }
+
+  @Get('me')
+  @UseGuards(AuthTokenGuard)
+  @HttpCode(HttpStatus.OK)
+  me(@Req() req: Request) {
+    return req.user;
   }
 }
