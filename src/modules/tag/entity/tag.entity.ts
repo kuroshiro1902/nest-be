@@ -3,6 +3,7 @@ import { User } from '@/modules/user/entity/user.entity';
 import { Entity, Column, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { NotebookTag } from '@/modules/notebook/entity/notebook-tag.entity';
 import { NoteTag } from '@/modules/note/entity/note-tag.entity';
+import { PostTag } from '@/modules/post/entity/post-tag.entity';
 
 export type TTagUniqueCondition = { slug: string; userId: string };
 
@@ -33,4 +34,9 @@ export class Tag extends BaseEntity {
     cascade: ['insert', 'update'],
   })
   noteTags: NoteTag[];
+
+  @OneToMany(() => PostTag, (postTag) => postTag.tag, {
+    cascade: ['insert', 'update'],
+  })
+  postTags: PostTag[];
 }

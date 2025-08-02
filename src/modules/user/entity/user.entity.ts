@@ -3,6 +3,7 @@ import { Entity, Column, OneToMany } from 'typeorm';
 import { BaseEntity } from '@/modules/common/entity/base.entity';
 import { Note } from '@/modules/note/entity/note.entity';
 import { Tag } from '@/modules/tag/entity/tag.entity';
+import { Post } from '@/modules/post/entity/post.entity';
 
 export enum EUserRole {
   ADMIN = 'admin',
@@ -52,4 +53,9 @@ export class User extends BaseEntity {
     cascade: ['insert', 'update'],
   })
   tags: Tag[];
+
+  @OneToMany(() => Post, (post) => post.user, {
+    cascade: ['insert', 'update'],
+  })
+  posts: Post[];
 }

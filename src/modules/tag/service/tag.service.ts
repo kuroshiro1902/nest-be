@@ -1,5 +1,5 @@
 import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
-import { FindOneOptions, ILike, Repository } from 'typeorm';
+import { FindOneOptions, ILike, Not, Repository } from 'typeorm';
 import { Tag, TTagUniqueCondition } from '../entity/tag.entity';
 import { BaseService } from '@/modules/common/service/base.service';
 import type { CreateTagDto } from '../dto/create-tag.dto';
@@ -7,6 +7,7 @@ import { UpdateTagDto } from '../dto/update-tag.dto';
 import { PageResult } from '@/modules/common/dto/pagination.model';
 import { SearchTagDto } from '../dto/search-tag.dto';
 import { InjectRepository } from '@nestjs/typeorm';
+import slugify from 'slugify';
 
 @Injectable()
 export class TagService extends BaseService<Tag> {
@@ -14,14 +15,27 @@ export class TagService extends BaseService<Tag> {
     super(repository);
   }
 
-  async createOne(createTagDto: CreateTagDto): Promise<Tag> {
+  async createOne(
+    createTagDto: CreateTagDto,
+    options: {
+      /**
+       * @default true
+       */
+      throwOnConflict?: boolean;
+    } = {
+      throwOnConflict: true,
+    },
+  ): Promise<Tag> {
     // Generate slug từ name
     const slug = this.generateSlug(createTagDto.name);
 
     const uniqueCondition: TTagUniqueCondition = { slug, userId: createTagDto.userId };
-    const existingTag = await this.exists({ where: uniqueCondition });
+    const existingTag = await this.repository.findOne({ where: uniqueCondition });
     if (existingTag) {
-      throw new ConflictException('Tag đã tồn tại');
+      if (options.throwOnConflict) {
+        throw new ConflictException('Tag đã tồn tại');
+      }
+      return existingTag;
     }
 
     const newTag = this.repository.create({
@@ -31,7 +45,19 @@ export class TagService extends BaseService<Tag> {
     return this.repository.save(newTag);
   }
 
-  async updateOne(userId: string, id: string, updateTagDto: UpdateTagDto): Promise<Tag> {
+  async updateOne(
+    userId: string,
+    id: string,
+    updateTagDto: UpdateTagDto,
+    options: {
+      /**
+       * @default true
+       */
+      throwOnConflict?: boolean;
+    } = {
+      throwOnConflict: true,
+    },
+  ): Promise<Tag> {
     const tag = await this.findOneOrThrow({ where: { id, userId } });
 
     // Nếu có thay đổi name, generate slug mới
@@ -39,9 +65,12 @@ export class TagService extends BaseService<Tag> {
       const newSlug = this.generateSlug(updateTagDto.name);
 
       const uniqueCondition: TTagUniqueCondition = { slug: newSlug, userId };
-      const existingTag = await this.exists({ where: uniqueCondition });
+      const existingTag = await this.repository.findOne({ where: { ...uniqueCondition, id: Not(id) } });
       if (existingTag) {
-        throw new ConflictException('Tag đã tồn tại');
+        if (options.throwOnConflict) {
+          throw new ConflictException('Tag đã tồn tại');
+        }
+        return existingTag;
       }
 
       return this.repository.save(this.repository.merge(tag, { ...updateTagDto, slug: newSlug }));
@@ -78,15 +107,11 @@ export class TagService extends BaseService<Tag> {
   }
 
   private generateSlug(name: string): string {
-    return (
-      name
-        .toLowerCase()
-        .trim()
-        // Thay thế các ký tự đặc biệt và dấu cách bằng dấu gạch ngang
-        .replace(/[^\w\s-]/g, '')
-        .replace(/[\s_-]+/g, '-')
-        // Loại bỏ dấu gạch ngang ở đầu và cuối
-        .replace(/^-+|-+$/g, '')
-    );
+    return slugify(name, {
+      lower: true,
+      strict: true,
+      locale: 'vi',
+      trim: true,
+    });
   }
 }

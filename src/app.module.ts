@@ -14,6 +14,7 @@ import { AppConfigModule } from './modules/app-config/app-config.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { ENV } from './config/environment.config';
 import { APP_GUARD } from '@nestjs/core';
+import { PostModule } from './modules/post/post.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { APP_GUARD } from '@nestjs/core';
     NoteToNotebookModule,
     TagModule,
     AppConfigModule,
+    PostModule,
   ],
   controllers: [AppController],
   providers: [
